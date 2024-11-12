@@ -1,11 +1,20 @@
 <!DOCTYPE html>
-<html lang="em">
-    <head>
-        <body>
-            <meta charset="utf-8" />
-            <script src="js/main.js"> </script>> 
-            <title> My Prototype </title>
-            
-        </body>
-    </head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/mystyle.css" rel="stylesheet" />
+    <title>My Prototype</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+        }
+      }
+    </script>
+</head>
+<body>
+    <script type="module" src="js/main.js"></script>
+</body>
 </html>
