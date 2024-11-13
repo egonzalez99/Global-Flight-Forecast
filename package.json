@@ -1,0 +1,22 @@
+{
+    "name": "global-flight-forecast",
+    "version": "1.0.0",
+    "description": "A globe for flight and weather data",
+    "main": "index.js",
+    "scripts": {
+        "start": "live-server",
+        "build": "vite build"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "three": "^0.154.0",
+        "three-globe": "^2.21.0"
+    },
+    "devDependencies": {
+        "vite": "^4.3.0"
+    },
+    "engines": {
+        "node": ">=14.0.0"
+    }
+}
