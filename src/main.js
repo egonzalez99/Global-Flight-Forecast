@@ -11,13 +11,19 @@ document.body.appendChild( renderer.domElement );
 const textureLoader = new THREE.TextureLoader();
 const earthTexture = textureLoader.load('assets/earthdark.jpg');
 
-const sphereGeometrygeometry = new THREE.SphereGeometry( 3, 32, 32 );
+const sphereGeometry = new THREE.SphereGeometry( 3, 32, 32 );
 const sphereMaterial = new THREE.MeshBasicMaterial( { map: earthTexture } );
-const globe = new THREE.Mesh( sphereGeometrygeometry, sphereMaterial );
+const globe = new THREE.Mesh( sphereGeometry, sphereMaterial );
+
+fetch('http://127.0.0.1:5000/api/air-quality/New%20York')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        // Process and display the data on your globe
+    })
+    .catch(error => console.error('Error fetching air quality data:', error));
 
 scene.add( globe);
-
-
 
 camera.position.z = 7;
 
