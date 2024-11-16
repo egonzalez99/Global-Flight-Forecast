@@ -15,34 +15,9 @@ const globeMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: 
 const globe = new THREE.Mesh(globeGeometry, globeMaterial);
 scene.add(globe);
 
-// Fetch Ozone Data from Flask server
-async function fetchOzoneData() {
-    const response = await fetch('http://127.0.0.1:5000/api/ozone-data');
-    const data = await response.json();
-    plotOzoneData(data);
-}
-
-// Plot Ozone Data onto the Globe
-function plotOzoneData(data) {
-    data.forEach(({ lat, lon, ozone }) => {
-        // basic 3D lat/lon 
-        const phi = (90 - lat) * (Math.PI / 180);
-        const theta = (lon + 180) * (Math.PI / 180);
-
-        const x = radius * Math.sin(phi) * Math.cos(theta);
-        const y = radius * Math.cos(phi);
-        const z = radius * Math.sin(phi) * Math.sin(theta);
-
-        // creat a marker to represent ozone 
-        const pointGeometry = new THREE.SphereGeometry(0.02, 5, 5);
-        const pointMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000  });
-        const point = new THREE.Mesh(pointGeometry, pointMaterial);
-        point.position.set(x, y, z);
-        scene.add(point);
-    });
-}
-
-fetchOzoneData();
+// function latlonCoords(lat, lon, radius) {
+//     const phi = 
+// }
 
 // animation loop
 function animate() {
