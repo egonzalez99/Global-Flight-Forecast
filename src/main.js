@@ -6,42 +6,51 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Load and apply Earth texture
-const textureLoader = new THREE.TextureLoader();
-const earthTexture = textureLoader.load('assets/earthdark.jpg');
-const sphereGeometry = new THREE.SphereGeometry(3, 32, 32);
-const sphereMaterial = new THREE.MeshBasicMaterial({ map: earthTexture });
-const globe = new THREE.Mesh(sphereGeometry, sphereMaterial);
+camera.position.z = 4;
+
+// create a globe 
+const radius = 2;
+const globeGeometry = new THREE.SphereGeometry(radius, 32, 32);
+const globeMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: true });
+const globe = new THREE.Mesh(globeGeometry, globeMaterial);
 scene.add(globe);
 
-camera.position.z = 7;
-
-// Fetch and process data
-const city = 'NewDelhi'; // Or any other city value you want to use
-fetch(`http://127.0.0.1:5000/api/air-quality/${city}`)
-    .then(response => response.json())
-    .then(data => {
-        data.locations.forEach(point => {
- 
-            // Create a small sphere for each data point
-            const pointGeometry = new THREE.SphereGeometry(0.05, 8, 8);
-            const pointMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-            const pointMesh = new THREE.Mesh(pointGeometry, pointMaterial);
-
-            // Position the data point on the globe
-            pointMesh.position.set(x, y, z);
-            globe.add(pointMesh);
-        });
-    })
-    .catch(error => console.error('Error fetching air quality data:', error));
-
-// Animation loop
-function animate() {
-    globe.rotation.y += 0.01;
-    renderer.render(scene, camera);
+// Fetch Ozone Data from Flask server
+async function fetchOzoneData() {
+    const response = await fetch('http://127.0.0.1:5000/api/ozone-data');
+    const data = await response.json();
+    plotOzoneData(data);
 }
 
-renderer.setAnimationLoop(animate);
+// Plot Ozone Data onto the Globe
+function plotOzoneData(data) {
+    data.forEach(({ lat, lon, ozone }) => {
+        // basic 3D lat/lon 
+        const phi = (90 - lat) * (Math.PI / 180);
+        const theta = (lon + 180) * (Math.PI / 180);
+
+        const x = radius * Math.sin(phi) * Math.cos(theta);
+        const y = radius * Math.cos(phi);
+        const z = radius * Math.sin(phi) * Math.sin(theta);
+
+        // creat a marker to represent ozone 
+        const pointGeometry = new THREE.SphereGeometry(0.02, 5, 5);
+        const pointMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000  });
+        const point = new THREE.Mesh(pointGeometry, pointMaterial);
+        point.position.set(x, y, z);
+        scene.add(point);
+    });
+}
+
+fetchOzoneData();
+
+// animation loop
+function animate() {
+    requestAnimationFrame(animate);
+    globe.rotation.y += 0.001;  
+    renderer.render(scene, camera);
+}
+animate();
 
 // Handle window resize
 window.addEventListener('resize', () => {
@@ -49,3 +58,4 @@ window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 });
+
