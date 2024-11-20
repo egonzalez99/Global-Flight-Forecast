@@ -1,33 +1,44 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // create the template for the scenary
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+let scene, camera, renderer, globe, controls;
 
-camera.position.z = 4;
-
-// create a globe 
-const radius = 2;
-const globeGeometry = new THREE.SphereGeometry(radius, 32, 32);
-const globeMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: true });
-const globe = new THREE.Mesh(globeGeometry, globeMaterial);
-scene.add(globe);
-
-// animation loop
-function animate() {
-    requestAnimationFrame(animate);
-    globe.rotation.y += 0.001;
-    renderer.render(scene, camera);
-}
+theScene();
 animate();
 
-// handle window resize
+function theScene() {
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  // Create the globe
+  const globeGeometry = new THREE.SphereGeometry(5, 32, 32);
+  const globeMaterial = new THREE.MeshBasicMaterial({ color: 0x003366, wireframe: true });
+  globe = new THREE.Mesh(globeGeometry, globeMaterial);
+  scene.add(globe);
+
+  // Position the camera
+  camera.position.z = 10;
+
+  //camera controls
+  controls = new OrbitControls(camera, renderer.domElement);
+  // Load weather data for New York
+  //fetchWeatherData(addMarker);
+  controls.update();
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
 window.addEventListener('resize', () => {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
 });
 
