@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 
+// create the template for the scenary
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
@@ -15,19 +16,15 @@ const globeMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: 
 const globe = new THREE.Mesh(globeGeometry, globeMaterial);
 scene.add(globe);
 
-// function latlonCoords(lat, lon, radius) {
-//     const phi = 
-// }
-
 // animation loop
 function animate() {
     requestAnimationFrame(animate);
-    globe.rotation.y += 0.001;  
+    globe.rotation.y += 0.001;
     renderer.render(scene, camera);
 }
 animate();
 
-// Handle window resize
+// handle window resize
 window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
