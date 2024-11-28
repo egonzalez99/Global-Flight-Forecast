@@ -1,37 +1,15 @@
-from google.analytics.data_v1beta import BetaAnalyticsDataClient
-from google.analytics.data_v1beta.types import RunReportRequest, Dimension, Metric
+from pytrends.request import TrendReq
 
-# Replace with the path to your service account key file
-SERVICE_ACCOUNT_KEY_FILE = r"C:\Users\geddi\Downloads\credentials-aa907536f211.json"
+pytrends = TrendReq(hl='en-US', tz=300) # timezone offset is done by looking at UTC and multiply by 60. No negatives
 
-# Replace with your GA4 property ID
-PROPERTY_ID = "468797450"
+kw_list = ["boots"]
 
-def get_new_york_data():
-    # Initialize the GA4 client
-    client = BetaAnalyticsDataClient.from_service_account_file(SERVICE_ACCOUNT_KEY_FILE)
+# function to get the interest over time for 'boots'
+def get_interest(): 
+    
+    pytrends.build_payload(kw_list, cat=0, timeframe='now 7-d', geo='US-NY', gprop='') #data from today till the past 7 days 
+    data = pytrends.interest_over_time()
 
-    # Define the API request
-    request = RunReportRequest(
-        property=f"properties/{PROPERTY_ID}",
-        dimensions=[Dimension(name="city")],
-        metrics=[Metric(name="activeUsers")],  # Example metric
-        date_ranges=[{"start_date": "7daysAgo", "end_date": "today"}],
-        dimension_filter={
-            "filter": {
-                "field_name": "city",
-                "string_filter": {"value": "New York"}
-            }
-        },
-    )
+    print(data)
 
-    # Run the query
-    response = client.run_report(request)
-
-    # Process and print the response
-    for row in response.rows:
-        print(f"City: {row.dimension_values[0].value}, Active Users: {row.metric_values[0].value}")
-
-if __name__ == "__main__":
-    get_new_york_data()
-
+get_interest()
