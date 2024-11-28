@@ -2,7 +2,7 @@ from google.analytics.data_v1beta import BetaAnalyticsDataClient
 from google.analytics.data_v1beta.types import RunReportRequest, Dimension, Metric
 
 # Replace with the path to your service account key file
-SERVICE_ACCOUNT_KEY_FILE = r"C:\Users\geddi\Documents\GitHub\Global-Flight-Forecast\src\python\credentials-aa907536f211.json"
+SERVICE_ACCOUNT_KEY_FILE = r"C:\Users\geddi\Downloads\credentials-aa907536f211.json"
 
 # Replace with your GA4 property ID
 PROPERTY_ID = "468797450"
