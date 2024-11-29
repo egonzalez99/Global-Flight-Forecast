@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { fetchData } from './weatherdata.js'; // import fetchdata
 import { addMarker } from './utils.js'; // Import marker
+import { fetchDataTrends } from './trendsdata.js'; //import trend data
 
 // create the template for the scenary and variables
 let scene, camera, renderer, globe, controls;
@@ -30,6 +31,35 @@ function theScene() {
   controls.update();
 
   fetchData((temp) => addMarker(temp, scene));  // passing the addMarker function with fetchData
+  
+  fetchDataTrends((data) => {
+    data.forEach((item) => {
+        const date = item.date; // Assuming 'date' exists in your JSON
+        const interest = item.boots; // Assuming 'boots' is the keyword
+
+        // Create a marker for the trend interest
+        const markerGeometry = new THREE.SphereGeometry(0.1, 8, 8); // Small sphere
+        const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+
+        // Map data to the globe (adjust as needed)
+        const latitude = 40.7128;
+        const longitude = -74.0060;
+
+        // Convert lat/lon to Cartesian coordinates
+        const phi = (90 - latitude) * (Math.PI / 180);
+        const theta = (longitude + 180) * (Math.PI / 180);
+        const radius = 5; // Match the globe radius
+
+        marker.position.set(
+            radius * Math.sin(phi) * Math.cos(theta),
+            radius * Math.cos(phi),
+            radius * Math.sin(phi) * Math.sin(theta)
+        );
+
+      scene.add(bar); // Add to your Three.js scene
+    });
+  });
 }
 
 // animation
