@@ -57,7 +57,7 @@ function theScene() {
             radius * Math.sin(phi) * Math.sin(theta)
         );
 
-      scene.add(bar); // Add to your Three.js scene
+        scene.add(marker); // Add to your Three.js scene
     });
   });
 }
