@@ -26,3 +26,4 @@ export function getTemperature(temp) {
   
     scene.add(marker);
   }
+  

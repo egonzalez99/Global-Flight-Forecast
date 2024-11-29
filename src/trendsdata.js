@@ -9,7 +9,7 @@ fetch('./trend_data.json')
         return response.json();
     })
     .then(data => {
-        callback(data); // Pass the data to the callback function
+        callback(data); // data to the callback function
     })
     .catch(err => {
         console.error('Error fetching trends data:', err);

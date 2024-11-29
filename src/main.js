@@ -37,19 +37,19 @@ function theScene() {
         const date = item.date; // Assuming 'date' exists in your JSON
         const interest = item.boots; // Assuming 'boots' is the keyword
 
-        // Create a marker for the trend interest
-        const markerGeometry = new THREE.SphereGeometry(0.1, 8, 8); // Small sphere
+        // create a marker for the trend data
+        const markerGeometry = new THREE.SphereGeometry(0.1, 8, 8); 
         const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
         const marker = new THREE.Mesh(markerGeometry, markerMaterial);
 
-        // Map data to the globe (adjust as needed)
+        // ny coordinates
         const latitude = 40.7128;
         const longitude = -74.0060;
 
-        // Convert lat/lon to Cartesian coordinates
+        // coordinates
         const phi = (90 - latitude) * (Math.PI / 180);
         const theta = (longitude + 180) * (Math.PI / 180);
-        const radius = 5; // Match the globe radius
+        const radius = 5; 
 
         marker.position.set(
             radius * Math.sin(phi) * Math.cos(theta),
