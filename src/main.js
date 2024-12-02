@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { fetchData } from './weatherdata.js'; // import fetchdata
-import { addMarker } from './utils.js'; // Import marker
+import { fetchDataAndAddMarkers } from './utils.js'; // Import marker
 import { fetchDataTrends } from './trendsdata.js'; //import trend data
 
 // create the template for the scenary and variables
@@ -18,8 +17,10 @@ function theScene() {
   document.body.appendChild(renderer.domElement);
 
   // create the globe visuals
+  const textureLoader = new THREE.TextureLoader();
+  const earthTexture = textureLoader.load('assets/earthdark.jpg');
   const globeGeometry = new THREE.SphereGeometry(5, 32, 32);
-  const globeMaterial = new THREE.MeshBasicMaterial({ color: 0x003366, wireframe: true });
+  const globeMaterial = new THREE.MeshBasicMaterial( { map: earthTexture });
   globe = new THREE.Mesh(globeGeometry, globeMaterial);
   scene.add(globe);
 
@@ -30,10 +31,11 @@ function theScene() {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.update();
 
-  fetchData((temp) => addMarker(temp, scene));  // passing the addMarker function with fetchData
-  
+  fetchDataAndAddMarkers(scene);
+
   fetchDataTrends((data) => {
     data.forEach((item) => {
+        console.log(data);
         const date = item.date; // Assuming 'date' exists in your JSON
         const interest = item.boots; // Assuming 'boots' is the keyword
 
@@ -42,22 +44,42 @@ function theScene() {
         const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
         const marker = new THREE.Mesh(markerGeometry, markerMaterial);
 
-        // ny coordinates
-        const latitude = 40.7128;
-        const longitude = -74.0060;
+        // NY coordinates
+        const nyLatitude = 40.7128;
+        const nyLongitude = -74.0060;
 
-        // coordinates
-        const phi = (90 - latitude) * (Math.PI / 180);
-        const theta = (longitude + 180) * (Math.PI / 180);
-        const radius = 5; 
+        // Florida coordinates
+        const flLatitude = 27.994402;
+        const flLongitude = -81.760254;
 
-        marker.position.set(
-            radius * Math.sin(phi) * Math.cos(theta),
-            radius * Math.cos(phi),
-            radius * Math.sin(phi) * Math.sin(theta)
+        // For New York
+        const nyPhi = (90 - nyLatitude) * (Math.PI / 180);
+        const nyTheta = (nyLongitude + 125) * (Math.PI / 125);
+        const radius = 5; // Adjust radius if needed
+
+        // For Florida
+        const flPhi = (90 - flLatitude) * (Math.PI / 180);
+        const flTheta = (flLongitude + 125) * (Math.PI / 125);
+
+        // Create a marker for New York
+        const nyMarker = new THREE.Mesh(markerGeometry, markerMaterial);
+        nyMarker.position.set(
+            radius * Math.sin(nyPhi) * Math.cos(nyTheta),
+            radius * Math.cos(nyPhi),
+            radius * Math.sin(nyPhi) * Math.sin(nyTheta)
         );
 
-        scene.add(marker); // Add to your Three.js scene
+        // Create a marker for Florida
+        const flMarker = new THREE.Mesh(markerGeometry, markerMaterial);
+        flMarker.position.set(
+            radius * Math.sin(flPhi) * Math.cos(flTheta),
+            radius * Math.cos(flPhi),
+            radius * Math.sin(flPhi) * Math.sin(flTheta)
+        );
+
+        // Add markers to the scene
+        scene.add(nyMarker); // Add NY marker
+        scene.add(flMarker); // Add Florida marker
     });
   });
 }
